@@ -1,0 +1,58 @@
+[
+  {
+    "id": "7f0fe801-1de5-4c7f-a461-b33d6ba1bc3c",
+    "amount": 6,
+    "category": "food",
+    "description": "Crispy",
+    "date": "2026-05-07T00:00:00.000Z",
+    "createdAt": "2026-05-07T19:35:33.493Z"
+  },
+  {
+    "id": "a124dd41-430b-4e70-bb69-aebfe829e426",
+    "amount": 4,
+    "category": "health",
+    "description": "Panadol",
+    "date": "2026-05-07T00:00:00.000Z",
+    "createdAt": "2026-05-07T19:35:51.868Z"
+  },
+  {
+    "id": "b33b4659-9e91-4cac-b564-12faf815f7f1",
+    "amount": 45,
+    "category": "other",
+    "description": "ry",
+    "date": "2026-05-07T00:00:00.000Z",
+    "createdAt": "2026-05-08T05:51:45.834Z"
+  },
+  {
+    "id": "4d393729-731d-4adb-b86d-1035ca620ca3",
+    "amount": 15,
+    "category": "other",
+    "description": "5t",
+    "date": "2026-05-08T00:00:00.000Z",
+    "createdAt": "2026-05-08T05:52:11.664Z"
+  },
+  {
+    "id": "1988bbbd-50bc-4ad0-8031-8068848adc32",
+    "amount": 5,
+    "category": "utilities",
+    "description": "Shampoo",
+    "date": "2026-05-08T00:00:00.000Z",
+    "createdAt": "2026-05-08T06:12:02.222Z"
+  },
+  {
+    "id": "bd680665-a35b-4b2f-82b2-8fcc06d7e863",
+    "amount": 2,
+    "category": "food",
+    "description": "Pepsi",
+    "date": "2026-05-08T00:00:00.000Z",
+    "createdAt": "2026-05-08T07:08:36.293Z"
+  },
+  {
+    "id": "05f9e94e-9101-46a4-89d1-dddbb431725a",
+    "amount": 3,
+    "category": "transport",
+    "description": "Taxi",
+    "date": "2026-05-08T00:00:00.000Z",
+    "createdAt": "2026-05-08T09:51:19.502Z"
+  }
+]

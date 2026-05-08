@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BUDGETIZE — Student Budget Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">$</span>
+        <span class="logo-text">BUDGETIZE</span>
+        <span class="logo-sub">student budget tracker</span>
+      </div>
+
+      <div class="streak-badge" id="streak-badge" title="Daily budget streak">
+        <span class="streak-fire" id="streak-fire">🔥</span>
+        <span class="streak-count" id="streak-count">0</span>
+        <span class="streak-label">day streak</span>
+      </div>
+
+      <div class="header-stats">
+        <div class="stat-pill">
+          <span class="pill-label">today</span>
+          <span class="pill-value" id="header-today-val">$0.00</span>
+        </div>
+        <div class="stat-pill">
+          <span class="pill-label">this month</span>
+          <span class="pill-value" id="header-month-val">$0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="page-nav">
+      <button class="page-tab active" data-page="dashboard">📊 Dashboard</button>
+      <button class="page-tab" data-page="goals">🎯 Financial Goals</button>
+    </nav>
+  </header>
+
+  <div class="encourage-banner" id="encourage-banner" style="display:none">
+    <span class="encourage-icon" id="encourage-icon">🎉</span>
+    <span class="encourage-text" id="encourage-text"></span>
+    <button class="encourage-close" onclick="document.getElementById('encourage-banner').style.display='none'">✕</button>
+  </div>
+
+  <!-- DASHBOARD PAGE -->
+  <main class="app-grid page-content" id="page-dashboard">
+
+    <aside class="left-panel">
+
+      <section class="card add-card">
+        <h2 class="card-title"><span class="card-title-icon">＋</span> Log Expense</h2>
+
+        <div class="form-group">
+          <label for="amount">Amount ($)</label>
+          <div class="amount-input-wrap">
+            <span class="currency-sign">$</span>
+            <input type="number" id="amount" placeholder="0.00" step="0.01" min="0.01" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category"><option value="">— pick one —</option></select>
+        </div>
+
+        <div class="form-group">
+          <label for="description">What for?</label>
+          <input type="text" id="description" placeholder="e.g. Shawarma + water" />
+        </div>
+
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" />
+        </div>
+
+        <button class="btn-add" id="btn-add">
+          <span>ADD EXPENSE</span><span class="btn-arrow">→</span>
+        </button>
+        <div class="toast" id="toast"></div>
+      </section>
+
+      <section class="card budget-card">
+        <h2 class="card-title"><span class="card-title-icon">🎯</span> My Budget</h2>
+
+        <div class="budget-progress-wrap">
+          <div class="budget-progress-labels">
+            <span id="bp-period-label">This Week</span>
+            <span id="bp-amounts">$0 / $0</span>
+          </div>
+          <div class="budget-bar-track">
+            <div class="budget-bar-fill" id="budget-bar-fill"></div>
+          </div>
+          <div class="budget-pct" id="budget-pct">0% used</div>
+        </div>
+
+        <div class="budget-inputs">
+          <div class="form-group">
+            <label for="budget-monthly">Monthly Allowance ($) <span class="budget-hint">— sets weekly &amp; daily automatically</span></label>
+            <div class="amount-input-wrap">
+              <span class="currency-sign">$</span>
+              <input type="number" id="budget-monthly" placeholder="e.g. 800" min="1" step="1" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="budget-weekly">Weekly Allowance ($) <span class="budget-hint">— must not exceed monthly ÷ 4</span></label>
+            <div class="amount-input-wrap">
+              <span class="currency-sign">$</span>
+              <input type="number" id="budget-weekly" placeholder="e.g. 200" min="1" step="1" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="budget-daily">Daily Allowance ($) <span class="budget-hint">— must not exceed monthly ÷ 30</span></label>
+            <div class="amount-input-wrap">
+              <span class="currency-sign">$</span>
+              <input type="number" id="budget-daily" placeholder="e.g. 26" min="1" step="1" />
+            </div>
+          </div>
+          <button class="btn-save-budget" id="btn-save-budget">
+            <span>SAVE BUDGET</span><span class="btn-arrow">✓</span>
+          </button>
+          <div class="toast" id="budget-toast"></div>
+        </div>
+      </section>
+
+      <section class="card warnings-card">
+        <h2 class="card-title"><span class="card-title-icon">⚠</span> Warnings</h2>
+        <div id="warnings-list" class="warnings-list">
+          <p class="empty-msg">No warnings yet. Keep it up! 🎉</p>
+        </div>
+      </section>
+
+      <section class="card advice-card">
+        <h2 class="card-title"><span class="card-title-icon">💡</span> Smart Tips</h2>
+        <div id="advice-list" class="advice-list">
+          <p class="empty-msg">Add expenses to get personalized tips.</p>
+        </div>
+      </section>
+
+    </aside>
+
+    <section class="center-panel">
+
+      <div class="period-tabs">
+        <button class="tab active" data-period="today">Today</button>
+        <button class="tab" data-period="week">This Week</button>
+        <button class="tab" data-period="month">This Month</button>
+        <button class="tab" data-period="all">All Time</button>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-tile big">
+          <span class="tile-label">Total Spent</span>
+          <span class="tile-value" id="sum-total">$0.00</span>
+        </div>
+        <div class="summary-tile">
+          <span class="tile-label">Transactions</span>
+          <span class="tile-value" id="sum-count">0</span>
+        </div>
+        <div class="summary-tile">
+          <span class="tile-label">Avg per Day</span>
+          <span class="tile-value" id="sum-avg">$0.00</span>
+        </div>
+        <div class="summary-tile">
+          <span class="tile-label">Biggest</span>
+          <span class="tile-value" id="sum-max">$0.00</span>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <h2 class="card-title"><span class="card-title-icon">◉</span> Spending by Category</h2>
+        <div class="chart-wrap">
+          <canvas id="donut-chart"></canvas>
+          <div class="chart-center-label">
+            <span id="chart-center-amount">—</span>
+            <span id="chart-center-label">total</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <h2 class="card-title"><span class="card-title-icon">▦</span> Category Breakdown</h2>
+        <canvas id="bar-chart" height="180"></canvas>
+      </div>
+
+    </section>
+
+    <section class="right-panel">
+      <div class="card list-card">
+        <div class="list-header">
+          <h2 class="card-title"><span class="card-title-icon">≡</span> Transactions</h2>
+          <input class="search-input" id="search" type="text" placeholder="search..." />
+        </div>
+        <div id="expense-list" class="expense-list">
+          <p class="empty-msg center">No expenses yet. Start logging!</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- GOALS PAGE -->
+  <main class="goals-page page-content" id="page-goals" style="display:none">
+
+    <div class="goals-header-row">
+      <div>
+        <h1 class="goals-page-title">🎯 Financial Goals</h1>
+        <p class="goals-page-sub">Track your savings, spending limits & emergency fund</p>
+      </div>
+      <button class="btn-new-goal" id="btn-new-goal">＋ NEW GOAL</button>
+    </div>
+
+    <div class="card goal-form-card" id="goal-form-card" style="display:none">
+      <h2 class="card-title"><span class="card-title-icon">＋</span> Create New Goal</h2>
+
+      <div class="goal-form-grid">
+        <div class="form-group">
+          <label for="goal-name">Goal Name</label>
+          <input type="text" id="goal-name" placeholder="e.g. Emergency Fund" />
+        </div>
+        <div class="form-group">
+          <label for="goal-type">Goal Type</label>
+          <select id="goal-type">
+            <option value="">— pick type —</option>
+            <option value="savings">💰 Save a Target Amount</option>
+            <option value="spending_limit">🛑 Weekly Spending Limit</option>
+            <option value="emergency_fund">🛡️ Emergency Fund</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="goal-target">Target Amount ($)</label>
+          <div class="amount-input-wrap">
+            <span class="currency-sign">$</span>
+            <input type="number" id="goal-target" placeholder="e.g. 500" min="1" step="1" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="goal-current">Already Saved ($)</label>
+          <div class="amount-input-wrap">
+            <span class="currency-sign">$</span>
+            <input type="number" id="goal-current" placeholder="0" min="0" step="1" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="goal-deadline">Deadline (optional)</label>
+          <input type="date" id="goal-deadline" />
+        </div>
+        <div class="form-group" id="weekly-limit-group" style="display:none">
+          <label for="goal-weekly-limit">Weekly Spending Limit ($)</label>
+          <div class="amount-input-wrap">
+            <span class="currency-sign">$</span>
+            <input type="number" id="goal-weekly-limit" placeholder="e.g. 100" min="1" step="1" />
+          </div>
+        </div>
+      </div>
+
+      <div class="goal-form-actions">
+        <button class="btn-save-goal" id="btn-save-goal">SAVE GOAL ✓</button>
+        <button class="btn-cancel-goal" id="btn-cancel-goal">Cancel</button>
+      </div>
+      <div class="toast" id="goal-toast"></div>
+    </div>
+
+    <div id="goals-list" class="goals-list">
+      <div class="goals-empty" id="goals-empty">
+        <div class="goals-empty-icon">🎯</div>
+        <p>No goals yet. Create your first one!</p>
+        <p class="goals-empty-examples">Ideas: Save $500 in 2 months · Keep eating out under $100/week · Build a $1,000 emergency fund</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Deposit Modal -->
+  <div class="modal-overlay" id="deposit-modal" style="display:none">
+    <div class="modal-box">
+      <h3 class="modal-title">Add Progress 💸</h3>
+      <p class="modal-sub" id="deposit-goal-name"></p>
+      <div class="form-group" style="margin-top:1rem">
+        <label for="deposit-amount">Amount to Add ($)</label>
+        <div class="amount-input-wrap">
+          <span class="currency-sign">$</span>
+          <input type="number" id="deposit-amount" placeholder="0.00" min="0.01" step="0.01" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-save-goal" id="btn-confirm-deposit">ADD ✓</button>
+        <button class="btn-cancel-goal" id="btn-cancel-deposit">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

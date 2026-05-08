@@ -1,0 +1,22 @@
+[
+  {
+    "id": "573d2e35-9c15-464d-af2c-70437b03ff6b",
+    "name": "15000",
+    "type": "savings",
+    "targetAmount": 14000,
+    "currentAmount": 2300,
+    "weeklyLimit": null,
+    "deadline": "2026-06-30",
+    "createdAt": "2026-05-08T06:10:52.423Z"
+  },
+  {
+    "id": "64c8e767-d0b3-4ae5-b98b-8b9f5fae02ef",
+    "name": "BMW",
+    "type": "savings",
+    "targetAmount": 14000,
+    "currentAmount": -100,
+    "weeklyLimit": null,
+    "deadline": "2026-05-14",
+    "createdAt": "2026-05-08T10:12:54.472Z"
+  }
+]
